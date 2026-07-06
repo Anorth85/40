@@ -213,10 +213,16 @@
     align-items:center;
   }
 
-  .taco-icon{
-    width: 64px;
-    height: 64px;
-    flex-shrink:0;
+  .hero-photo{
+    position:relative;
+    z-index:1;
+    width: min(280px, 60vw);
+    height: min(280px, 60vw);
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid var(--cream-deep);
+    box-shadow: 0 12px 30px rgba(20,53,48,0.25);
+    margin-bottom: 1.6rem;
   }
 
   .timeline-copy{
@@ -420,6 +426,7 @@
 
   <section class="hero">
     <div class="sun" aria-hidden="true"></div>
+    <img class="hero-photo" src="taco-lunch.png" alt="Tecknad hand som håller en taco i solskenet" />
     <p class="eyebrow">Du är varmt välkommen till</p>
     <div class="big-forty">4<span>0</span></div>
     <h1 class="hero-name">Anders fyller 40 år!</h1>
@@ -519,7 +526,10 @@
     // Handle submit
     const HOST_EMAIL = "Anders.nordsater@gmail.com";
 
-    form.addEventListener('submit', (e) => {
+    // Byt ut mot din egen Formspree-adress (se instruktion nedan) för att spara svaren automatiskt.
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/xykqoqla";
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const namn = document.getElementById('namn').value.trim();
       const vuxna = document.getElementById('vuxna').value;
@@ -532,7 +542,20 @@
         localStorage.setItem('osa_entries', JSON.stringify(entries));
       }catch(err){ /* localStorage unavailable, ignore */ }
 
-      // Build mailto link so the host can also receive it by email
+      // Try to send the RSVP to Formspree so it's stored centrally and emailed to the host
+      let sentToFormspree = false;
+      if (!FORMSPREE_ENDPOINT.includes('DITT-FORM-ID')){
+        try{
+          const res = await fetch(FORMSPREE_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ namn, vuxna, barn })
+          });
+          sentToFormspree = res.ok;
+        }catch(err){ /* network/setup issue, fall back to mailto below */ }
+      }
+
+      // Build mailto link as a manual fallback / extra confirmation
       const subject = encodeURIComponent('OSA till 40-årskalaset – ' + namn);
       const body = encodeURIComponent(
         'Namn: ' + namn + '\n' +
@@ -540,6 +563,9 @@
         'Antal barn: ' + barn
       );
       document.getElementById('mailtoLink').href = `mailto:${HOST_EMAIL}?subject=${subject}&body=${body}`;
+      document.getElementById('mailtoLink').textContent = sentToFormspree
+        ? 'Ditt OSA är sparat! Klicka här om du ändå vill mejla en bekräftelse också'
+        : 'Klicka här för att skicka ditt OSA via e-post';
 
       document.getElementById('confirmText').textContent =
         `Tack ${namn}! Vi har noterat ${vuxna} vuxna och ${barn} barn. Vi ses på kalaset!`;
