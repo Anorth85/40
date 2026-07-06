@@ -96,6 +96,17 @@
     color: var(--teal-deep);
   }
 
+  .year-kalas{
+    position:relative;
+    z-index:1;
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    color: var(--teal);
+    margin-top: -0.6rem;
+    letter-spacing: 0.02em;
+  }
+
   .hero-name{
     position:relative;
     z-index:1;
@@ -434,7 +445,8 @@
     <div class="sun" aria-hidden="true"></div>
     <img class="hero-photo" src="taco-lunch.png" alt="Tecknad hand som håller en taco i solskenet" />
     <p class="eyebrow">Du är varmt välkommen till</p>
-    <div class="big-forty">4<span>0</span>års kalas</div>
+    <div class="big-forty">4<span>0</span></div>
+    <p class="year-kalas">års kalas</p>
     <h1 class="hero-name">Anders <s class="strike">fyller</s> har fyllt 40 år!</h1>
     <p class="hero-sub">Lunch, tårta och firande — häng med hela dagen.</p>
     <p class="scroll-hint">Detaljer och OSA</p>
@@ -472,7 +484,7 @@
     <div class="ticket">
       <div class="perforation" aria-hidden="true"></div>
       <h3 class="rsvp-heading">Kommer du?</h3>
-      <button class="rsvp-toggle" id="rsvpToggle" aria-expanded="false" aria-controls="rsvpForm">Vi kommer!</button>
+      <button class="rsvp-toggle" id="rsvpToggle" aria-expanded="false" aria-controls="rsvpForm">Vi kommer</button>
 
       <form class="rsvp-form" id="rsvpForm">
         <div class="field">
